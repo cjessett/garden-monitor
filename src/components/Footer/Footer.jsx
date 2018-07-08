@@ -29,11 +29,6 @@ function Footer({ ...props }) {
                 Portfolio
               </a>
             </ListItem>
-            <ListItem className={classes.inlineBlock}>
-              <a href="#blog" className={classes.block}>
-                Blog
-              </a>
-            </ListItem>
           </List>
         </div>
         <p className={classes.right}>

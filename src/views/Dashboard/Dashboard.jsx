@@ -10,19 +10,20 @@ import GridItem from "components/Grid/GridItem.jsx";
 import Button from 'components/CustomButtons/Button.jsx';
 
 import Valve from './Valve.jsx';
+import NewValveForm from './NewValveForm.jsx';
 
 import dashboardStyle from "assets/jss/material-dashboard-react/views/dashboardStyle.jsx";
 
+const getAvg = _ => Math.floor(300 + Math.random()*500);
+
 const data = [
-  { name: 'Valve 1', id: 0, isOpen: false },
-  { name: 'Valve 2', id: 1, isOpen: false },
-  { name: 'Valve 3', id: 2, isOpen: false },
-  { name: 'Valve 4', id: 3, isOpen: false },
-  { name: 'Valve 5', id: 4, isOpen: false },
+  { name: 'Valve 1', id: 0, isOpen: false, avg: getAvg() },
+  { name: 'Valve 2', id: 1, isOpen: false, avg: getAvg() },
+  { name: 'Valve 3', id: 2, isOpen: false, avg: getAvg() },
 ];
 
 class Dashboard extends React.Component {
-  state = { valves: data };
+  state = { valves: data, formOpen: false };
 
   handleChange = name => event => {
     this.setState(prevState => {
@@ -31,6 +32,15 @@ class Dashboard extends React.Component {
       return { valves: [...prevState.valves.filter(v => v.name !== name), updatedValve]}
     });
   };
+
+  handleSubmit = formData => {
+    console.log(formData);
+    const newValve = { name: formData.name, id: formData.serial, isOpen: false, avg: getAvg() };
+    this.setState(prevState => ({ formOpen: false, valves: [...prevState.valves, newValve] }));
+  }
+
+  openForm = _ => this.setState({ formOpen: true });
+  closeForm = _ => this.setState({ formOpen: false });
 
   render() {
     const { classes } = this.props;
@@ -43,6 +53,7 @@ class Dashboard extends React.Component {
             classes={classes}
             isOpen={this.state.valves.find(valve => valve.name === v.name).isOpen}
             handleChange={this.handleChange(v.name)}
+            avg={v.avg}
           />
         </a>
       </GridItem>
@@ -53,7 +64,9 @@ class Dashboard extends React.Component {
         <Grid container alignItems="center">
           {valves}
           <GridItem xs={12} sm={12} md={4} style={{ textAlign: 'center' }}>
-            <Button justIcon round color="info" aria-label="add"><AddIcon /></Button>
+            {this.state.formOpen ?
+              <NewValveForm handleSubmit={this.handleSubmit} closeForm={this.closeForm} /> :
+              <Button justIcon round color="info" aria-label="add" onClick={this.openForm}><AddIcon /></Button>}
           </GridItem>
         </Grid>
       </div>

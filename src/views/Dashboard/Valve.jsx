@@ -10,19 +10,17 @@ import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import GridItem from "components/Grid/GridItem.jsx";
 import Card from "components/Card/Card.jsx";
-import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
-import Button from "components/CustomButtons/Button.jsx";
 
 import styles from "assets/jss/material-dashboard-react/components/switchStyle.jsx";
 
 class Valve extends React.Component {
   render() {
-    const { name, classes, isOpen, handleChange } = this.props;
+    const { name, classes, isOpen, handleChange, avg } = this.props;
     const switchClasses = { switchBase: classes.colorSwitchBase, checked: classes.colorChecked, bar: classes.colorBar };
     return (
-      <Card chart>
+      <Card>
         <CardBody>
           <Grid container spacing={0} alignItems="center">
             <GridItem xs={6}>
@@ -35,7 +33,7 @@ class Valve extends React.Component {
               </FormGroup>
             </GridItem>
             <GridItem xs={6}>
-              <Typography variant="display2">549</Typography>
+              <Typography variant="display2">{avg}</Typography>
             </GridItem>
           </Grid>
         </CardBody>
