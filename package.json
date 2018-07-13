@@ -1,8 +1,7 @@
 {
-  "name": "material-dashboard-react",
-  "version": "1.2.0",
-  "description": "Material Dashboard React. Coded by Creative Tim",
-  "private": false,
+  "name": "garden-monitor-ui",
+  "version": "0.0.1",
+  "description": "Garden Monitor UI",
   "main": "index.js",
   "dependencies": {
     "@material-ui/core": "1.2.1",
@@ -29,19 +28,21 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/material-dashboard-react.git"
+    "url": "git+https://github.com/cjessett/garden-monitor.git"
   },
   "keywords": [],
-  "author": "Creative Tim <hello@creative-tim.com> (https://www.creative-tim.com/)",
+  "author": "CJ Jessett (https://cjessett.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/material-dashboard-react/issues"
+    "url": "https://github.com/cjessett/garden-monitor/issues"
   },
-  "homepage": "https://creativetimofficial.github.io/material-dashboard-react/#/dashboard",
+  "homepage": "https://cjessett.github.io/garden-monitor/",
   "devDependencies": {
     "redux-devtools-extension": "^2.13.5"
   }
