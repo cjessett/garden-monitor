@@ -42,7 +42,7 @@
   "bugs": {
     "url": "https://github.com/cjessett/garden-monitor/issues"
   },
-  "homepage": "https://cjessett.github.io/garden-monitor/",
+  "homepage": "https://cjessett.com/garden-monitor/",
   "devDependencies": {
     "redux-devtools-extension": "^2.13.5"
   }

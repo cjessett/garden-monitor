@@ -1,7 +1,7 @@
-# [Material Dashboard React - Free Material-UI Design Admin](https://creativetimofficial.github.io/material-dashboard-react/)
+# [Garden Monitor - Garden Monitor UI](https://cjessett.github.io/garden-monitor/)
 [![version][version-badge]][CHANGELOG] [![license][license-badge]][LICENSE]
 
-![alt text](https://s3.amazonaws.com/creativetim_bucket/products/71/original/opt_mdr_thumbnail.jpg "Material Dashboard Free React")
+![alt text](./garden-monitor.png "Material Dashboard Free React")
 
 Material Dashboard React is a free Material-UI Admin with a fresh, new design inspired by Google's Material Design. We are very excited to introduce our take on the material concepts through an easy to use and beautiful set of components. Material Dashboard React was built over the popular Material-UI framework.
 
@@ -20,26 +20,24 @@ You can find the Github Repo here.
 
 ## Links:
 
-+ [Live Preview](https://creativetimofficial.github.io/material-dashboard-react/)
-+ [Material Dashboard HTML](http://demos.creative-tim.com/material-dashboard/examples/dashboard.html)
++ [Live Preview](https://cjessett.com/garden-monitor/)
 
 ## Quick start
 
 Quick start options:
 
-- [Download from Github](https://github.com/creativetimofficial/material-dashboard-react/archive/master.zip).
-- [Download from Creative Tim](http://www.creative-tim.com/product/material-dashboard-react).
-- Clone the repo: `git clone https://github.com/creativetimofficial/material-dashboard-react.git`.
+- [Download from Github](https://github.com/cjessett/garden-monitor/archive/master.zip).
+- Clone the repo: `git clone https://github.com/cjessett/garden-monitor.git`.
 
 ## Terminal Commands
 
 1. Install NodeJs from [NodeJs Official Page](https://nodejs.org/en).
 2. Open Terminal
 3. Go to your file project
-4. Run in terminal: ```npm install```
-5. Then: ```npm start```
+4. Run in terminal: ```yarn```
+5. Then: ```yarn start```
 6. Navigate to `http://localhost:3000/`
-7. (optional) Run in terminal `npm i -g cross-env`
+7. (optional) Run in terminal `yarn i -g cross-env`
 
 ### What's included
 
@@ -169,28 +167,10 @@ material-dashboard-react
 
 ## Useful Links
 
-More products from Creative Tim: <https://www.creative-tim.com/bootstrap-themes>
-
-Tutorials: <https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w>
-
-Freebies: <https://www.creative-tim.com/products>
-
-Affiliate Program (earn money): <https://www.creative-tim.com/affiliates/new>
-
-Social Media:
-
-Twitter: <https://twitter.com/CreativeTim>
-
-Facebook: <https://www.facebook.com/CreativeTim>
-
-Dribbble: <https://dribbble.com/creativetim>
-
-Google+: <https://plus.google.com/+CreativetimPage>
-
-Instagram: <https://instagram.com/creativetimofficial>
+Bootstrapped with [Material Dashboard React](http://www.creative-tim.com/product/material-dashboard-react) by Creative Tim: <https://www.creative-tim.com/bootstrap-themes>
 
 [CHANGELOG]: ./CHANGELOG.md
 
 [LICENSE]: ./LICENSE.md
-[version-badge]: https://img.shields.io/badge/version-1.3.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.0.1-blue.svg
 [license-badge]: https://img.shields.io/badge/license-MIT-blue.svg
