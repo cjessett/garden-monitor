@@ -7,7 +7,7 @@ import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import Button from 'components/CustomButtons/Button.jsx';
 
-export default class NewValveForm extends React.Component {
+export default class NewSensorForm extends React.Component {
   state = { name: '', serial: '' }
   handleChange = e => this.setState({ [e.target.id]: e.target.value });
   handleSubmit = _ => this.props.handleSubmit(this.state);
@@ -19,7 +19,7 @@ export default class NewValveForm extends React.Component {
       <Card>
         <CardBody>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variable="title">Register a New Valve</Typography>
+            <Typography variable="title">Register a New Sensor</Typography>
             <Button justIcon round color="transparent" size="sm" onClick={this.props.closeForm}><i className="material-icons">close</i></Button>
           </div>
           <CustomInput labelText="Serial Number" id="serial" formControlProps={formControlProps} />

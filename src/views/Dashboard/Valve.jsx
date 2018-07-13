@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import AccessTime from "@material-ui/icons/AccessTime";
@@ -12,12 +14,19 @@ import GridItem from "components/Grid/GridItem.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
+import MiniLoad from "components/Loading/Mini.jsx";
 
-import styles from "assets/jss/material-dashboard-react/components/switchStyle.jsx";
+import { toggleValve, isUpdatingId } from 'ducks/valves';
+import { getAverage } from 'ducks/sensors';
+
+import styles from "assets/jss/material-dashboard-react/components/valveCardStyle.jsx";
 
 class Valve extends React.Component {
+  toggleValve = event => {
+    this.props.toggleValve({ id: this.props.id, isOpen: event.target.checked });
+  }
   render() {
-    const { name, classes, isOpen, handleChange, avg } = this.props;
+    const { id, name, classes, isOpen, average, isUpdating } = this.props;
     const switchClasses = { switchBase: classes.colorSwitchBase, checked: classes.colorChecked, bar: classes.colorBar };
     return (
       <Card>
@@ -27,13 +36,13 @@ class Valve extends React.Component {
               <h4 className={classes.cardTitle}>{name}</h4>
               <FormGroup row>
                 <FormControlLabel
-                  control={<Switch checked={isOpen} onChange={handleChange} value={name} classes={switchClasses} />}
-                  label={isOpen ? 'Open' : 'Closed'}
+                  control={<Switch checked={isOpen} onChange={this.toggleValve} value={name} classes={switchClasses} />}
+                  label={isUpdating ? <MiniLoad /> : (isOpen ? 'Open' : 'Closed')}
                 />
               </FormGroup>
             </GridItem>
             <GridItem xs={6}>
-              <Typography variant="display2">{avg}</Typography>
+              <Typography variant="display2">{average}</Typography>
             </GridItem>
           </Grid>
         </CardBody>
@@ -41,11 +50,22 @@ class Valve extends React.Component {
           <span className={classes.stats}>
             <AccessTime /> updated 2 hours ago
           </span>
-          <span href="#" style={{ float: 'right' }}><i className="material-icons">arrow_right_alt</i></span>
+          <span href="#" style={{ float: 'right' }}>
+            <Link to={`/valves/${id}`}><i className="material-icons">arrow_right_alt</i></Link>
+          </span>
         </CardFooter>
       </Card>
     );
   }
 }
 
-export default withStyles(styles)(Valve);
+const mapDispatchToProps = dispatch => ({
+  toggleValve: ({ id, isOpen }) => dispatch(toggleValve({ id, isOpen })),
+})
+
+const mapStateToProps = (state, ownProps) => ({
+  average: getAverage(state, ownProps.id),
+  isUpdating: isUpdatingId(state, ownProps.id),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Valve));

@@ -1,4 +1,4 @@
-import { successColor, infoColor } from "assets/jss/material-dashboard-react.jsx";
+import { infoColor } from "assets/jss/material-dashboard-react.jsx";
 
 const dashboardStyle = {
   stats: {

@@ -30,9 +30,7 @@ const switchRoutes = (
 );
 
 class App extends React.Component {
-  state = {
-    mobileOpen: false
-  };
+  state = { mobileOpen: false };
   handleDrawerToggle = () => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };

@@ -20,6 +20,8 @@ function Header({ ...props }) {
     props.routes.map((prop, key) => {
       if (prop.path === props.location.pathname) {
         name = prop.navbarName;
+      } else if (props.location.pathname.includes(prop.root)) {
+        name = prop.navbarName
       }
       return null;
     });
