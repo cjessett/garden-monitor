@@ -20,6 +20,7 @@ export const getVisibilityFilter = state => state.valves.visibilityFilter;
 export const isUpdating = state => state.valves.updating;
 export const isCreating = state => state.valves.creating;
 export const isUpdatingId = (state, id) => state.valves.updating && (state.valves.updatingId === id);
+export const getValve = (state, id) => state.valves.items.find(v => v.id === id);
 
 export function getVisibleValves(state) {
   const valves = getValves(state);
