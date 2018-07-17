@@ -21,6 +21,14 @@ export const isUpdating = state => state.valves.updating;
 export const isCreating = state => state.valves.creating;
 export const isUpdatingId = (state, id) => state.valves.updating && (state.valves.updatingId === id);
 export const getValve = (state, id) => state.valves.items.find(v => v.id === id);
+export const isLoading = state => state.valves.loading;
+
+export function getAverage(state, id) {
+  const sensors = state.sensors.items.filter(s => s.valveId === id);
+  if (!sensors.length) return null;
+  const sum = sensors.reduce((total, s) => total + s.moisture, 0);
+  return Math.floor(sum / sensors.length);
+}
 
 export function getVisibleValves(state) {
   const valves = getValves(state);

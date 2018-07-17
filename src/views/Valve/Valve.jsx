@@ -17,20 +17,33 @@ import NewSensorForm from './NewSensorForm.jsx';
 import Sensor from './Sensor.jsx';
 
 import styles from "assets/jss/material-dashboard-react/components/valveCardStyle.jsx";
+import ValveClient from 'utils/ValveClient';
 
-import { toggleValve, getValves } from 'ducks/valves';
+import { toggleValve, getValve } from 'ducks/valves';
 import { createSensor, getSensors, getAverage } from 'ducks/sensors';
-import { hydrate } from 'ducks';
 
 class Valve extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { formOpen: false };
+    this.client = ValveClient({ thingName: this.props.name, onMessage: this.handleMessage });
   }
 
   componentDidMount() {
+    this.client.isValveOpen().then(isOpen => this.setState({ isOpen, fetched: true }));
     if (this.props.name) return;
-    this.props.load(this.props.match.params.id);
+  }
+
+  handleChange = ({ target: { checked } }) => {
+    const desiredValveState = checked ? 'open' : 'closed';
+    this.client.toggleValve(desiredValveState)
+    .then(() => this.props.toggleValve({ id: this.props.id, isOpen: checked }))
+  }
+
+  handleMessage = (topic, payload) => {
+    const { state: { reported } } = JSON.parse(payload);
+    if (!reported) return;
+    if (reported.valve) this.props.toggleValve({ id: this.props.id, isOpen: reported.valve });
   }
 
   handleSubmit = ({ name, serial }) => {
@@ -42,9 +55,8 @@ class Valve extends React.Component {
   closeForm = _ => this.setState({ formOpen: false });
 
   render() {
-    const { id, name, isOpen, average, classes, sensors, loading, isUpdatingValve, isCreatingSensor } = this.props;
+    const { name, isOpen, average, classes, sensors, loading, isUpdatingValve, isCreatingSensor } = this.props;
     if (loading && !name) return <Spinner />;
-    const toggle = e => this.props.toggleValve({ id, isOpen: e.target.checked });
     const switchClasses = { switchBase: classes.colorSwitchBase, checked: classes.colorChecked, bar: classes.colorBar };
     const sensorCards = sensors.map(s => <GridItem xs={12} sm={12} md={4} key={s.id}><Sensor {...s} classes={classes} /></GridItem>)
     return (
@@ -59,7 +71,7 @@ class Valve extends React.Component {
           <FormGroup row>
             <span>
               <FormControlLabel
-                control={<Switch checked={isOpen} onChange={toggle} value={name} classes={switchClasses} />}
+                control={<Switch checked={isOpen} onChange={this.handleChange} value={name} classes={switchClasses} />}
                 label={isUpdatingValve ? <MiniLoad /> : (isOpen ? 'Open' : 'Closed')}
               />
             </span>
@@ -82,7 +94,7 @@ class Valve extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const valveId = Number(ownProps.match.params.id);
-  const valve = getValves(state).find(v => v.id === valveId);
+  const valve = getValve(state, valveId);
   const sensors = getSensors(state, valveId);
   const average = getAverage(state, valveId);
   const isUpdatingValve = state.valves.updating;
@@ -94,7 +106,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
   toggleValve: ({ id, isOpen }) => dispatch(toggleValve({ id, isOpen })),
   createSensor: sensor => dispatch(createSensor(sensor)),
-  load: _ => dispatch(hydrate()),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Valve));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Valve));

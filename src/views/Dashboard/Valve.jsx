@@ -16,7 +16,7 @@ import CardBody from "components/Card/CardBody.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import MiniLoad from "components/Loading/Mini.jsx";
 
-import { toggleValve, isUpdatingId, getValve } from 'ducks/valves';
+import { toggleValve, isUpdatingId, getValve, getAverage } from 'ducks/valves';
 
 import ValveClient from '../../utils/ValveClient';
 
@@ -45,7 +45,7 @@ class Valve extends React.Component {
   }
 
   render() {
-    const { id, name, classes, isOpen, avg, isUpdating } = this.props;
+    const { id, name, classes, isOpen, average, isUpdating } = this.props;
     const switchClasses = { switchBase: classes.colorSwitchBase, checked: classes.colorChecked, bar: classes.colorBar };
     return (
       <Card>
@@ -61,7 +61,7 @@ class Valve extends React.Component {
               </FormGroup>
             </GridItem>
             <GridItem xs={6}>
-              <Typography variant="display2">{avg}</Typography>
+              <Typography variant="display2">{average}</Typography>
             </GridItem>
           </Grid>
         </CardBody>
@@ -86,6 +86,10 @@ const mapDispatchToProps = dispatch => ({
 //   average: getAverage(state, ownProps.id),
 //   isUpdating: isUpdatingId(state, ownProps.id),
 // })
-const mapStateToProps = (state, ownProps) => ({ ...getValve(state, ownProps.id), isUpdating: isUpdatingId(state, ownProps.id) });
+const mapStateToProps = (state, ownProps) => ({
+  ...getValve(state, ownProps.id),
+  isUpdating: isUpdatingId(state, ownProps.id),
+  average: getAverage(state, ownProps.id),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Valve));
