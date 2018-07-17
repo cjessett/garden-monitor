@@ -16,17 +16,36 @@ import CardBody from "components/Card/CardBody.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import MiniLoad from "components/Loading/Mini.jsx";
 
-import { toggleValve, isUpdatingId } from 'ducks/valves';
-import { getAverage } from 'ducks/sensors';
+import { toggleValve, isUpdatingId, getValve } from 'ducks/valves';
+
+import ValveClient from '../../utils/ValveClient';
 
 import styles from "assets/jss/material-dashboard-react/components/valveCardStyle.jsx";
 
 class Valve extends React.Component {
-  toggleValve = event => {
-    this.props.toggleValve({ id: this.props.id, isOpen: event.target.checked });
+  constructor(props) {
+    super(props);
+    this.client = ValveClient({ thingName: this.props.name, onMessage: this.handleMessage })
   }
+
+  componentDidMount = () => {
+    return this.client.isValveOpen().then(isOpen => this.setState({ isOpen, fetched: true }))
+  }
+
+  handleChange = ({ target: { checked } }) => {
+    const desiredValveState = checked ? 'open' : 'closed';
+    this.client.toggleValve(desiredValveState)
+    .then(() => this.props.toggleValve({ id: this.props.id, isOpen: checked }))
+  }
+
+  handleMessage = (topic, payload) => {
+    const { state: { reported } } = JSON.parse(payload);
+    if (!reported) return;
+    if (reported.valve) this.props.toggleValve({ id: this.props.id, isOpen: reported.valve });
+  }
+
   render() {
-    const { id, name, classes, isOpen, average, isUpdating } = this.props;
+    const { id, name, classes, isOpen, avg, isUpdating } = this.props;
     const switchClasses = { switchBase: classes.colorSwitchBase, checked: classes.colorChecked, bar: classes.colorBar };
     return (
       <Card>
@@ -36,13 +55,13 @@ class Valve extends React.Component {
               <h4 className={classes.cardTitle}>{name}</h4>
               <FormGroup row>
                 <FormControlLabel
-                  control={<Switch checked={isOpen} onChange={this.toggleValve} value={name} classes={switchClasses} />}
+                  control={<Switch checked={isOpen} onChange={this.handleChange} value={name} classes={switchClasses} />}
                   label={isUpdating ? <MiniLoad /> : (isOpen ? 'Open' : 'Closed')}
                 />
               </FormGroup>
             </GridItem>
             <GridItem xs={6}>
-              <Typography variant="display2">{average}</Typography>
+              <Typography variant="display2">{avg}</Typography>
             </GridItem>
           </Grid>
         </CardBody>
@@ -63,9 +82,10 @@ const mapDispatchToProps = dispatch => ({
   toggleValve: ({ id, isOpen }) => dispatch(toggleValve({ id, isOpen })),
 })
 
-const mapStateToProps = (state, ownProps) => ({
-  average: getAverage(state, ownProps.id),
-  isUpdating: isUpdatingId(state, ownProps.id),
-})
+// const mapStateToProps = (state, ownProps) => ({
+//   average: getAverage(state, ownProps.id),
+//   isUpdating: isUpdatingId(state, ownProps.id),
+// })
+const mapStateToProps = (state, ownProps) => ({ ...getValve(state, ownProps.id), isUpdating: isUpdatingId(state, ownProps.id) });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Valve));

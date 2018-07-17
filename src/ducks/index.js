@@ -17,7 +17,7 @@ let SENSORS = [
 ];
 
 let VALVES = [
-  { name: 'Valve 1', id: 0, isOpen: false, avg: getAvg() },
+  { name: 'proto_valve', id: 0, isOpen: false, avg: getAvg() },
   { name: 'Valve 2', id: 1, isOpen: false, avg: getAvg() },
   { name: 'Valve 3', id: 2, isOpen: false, avg: getAvg() },
 ];
