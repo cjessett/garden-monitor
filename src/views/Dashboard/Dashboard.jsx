@@ -17,9 +17,13 @@ import { hydrate } from 'ducks';
 class Dashboard extends React.Component {
   state = { formOpen: false };
 
+  componentWillMount() {
+    console.log('mounting route')
+  }
+
   componentDidMount() {
+    console.log('mounted route')
     if (this.props.valves.length) return;
-    this.props.load();
   }
 
   handleSubmit = ({ name, serial }) => {
