@@ -2,18 +2,16 @@ import { combineReducers } from 'redux';
 import valves from './valves';
 import sensors from './sensors';
 
-const getAvg = _ => Math.floor(300 + Math.random()*500);
-
 let SENSORS = [
-  { name: 'Sensor 1', id: 0, moisture: getAvg(), valveId: 0 },
-  { name: 'Sensor 2', id: 1, moisture: getAvg(), valveId: 0 },
-  { name: 'Sensor 3', id: 2, moisture: getAvg(), valveId: 0 },
-  // { name: 'Sensor 4', id: 3, moisture: getAvg(), valveId: 1 },
-  // { name: 'Sensor 5', id: 4, moisture: getAvg(), valveId: 1 },
-  // { name: 'Sensor 6', id: 5, moisture: getAvg(), valveId: 1 },
-  // { name: 'Sensor 7', id: 6, moisture: getAvg(), valveId: 2 },
-  // { name: 'Sensor 8', id: 7, moisture: getAvg(), valveId: 2 },
-  // { name: 'Sensor 9', id: 8, moisture: getAvg(), valveId: 2 },
+  { name: 'ss-1', id: 0, valveId: 0 },
+  { name: 'esp8266', id: 1, valveId: 0 },
+  // { name: 'Sensor 3', id: 2, valveId: 0 },
+  // { name: 'Sensor 4', id: 3, valveId: 1 },
+  // { name: 'Sensor 5', id: 4, valveId: 1 },
+  // { name: 'Sensor 6', id: 5, valveId: 1 },
+  // { name: 'Sensor 7', id: 6, valveId: 2 },
+  // { name: 'Sensor 8', id: 7, valveId: 2 },
+  // { name: 'Sensor 9', id: 8, valveId: 2 },
 ];
 
 let VALVES = [

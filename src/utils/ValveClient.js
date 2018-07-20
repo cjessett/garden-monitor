@@ -34,7 +34,6 @@ function ValveClient({ thingName, onMessage }) {
   const cognitoIdentity = new AWS.CognitoIdentity();
   AWS.config.credentials.get((err, data) => {
      if (!err) {
-        console.log('retrieved identity: ' + AWS.config.credentials.identityId);
         var params = {
            IdentityId: AWS.config.credentials.identityId
         };
@@ -50,12 +49,12 @@ function ValveClient({ thingName, onMessage }) {
                 data.Credentials.SessionToken
               );
            } else {
-              console.log('error retrieving credentials: ' + err);
+              console.error('error retrieving credentials: ' + err);
               alert('error retrieving credentials: ' + err);
            }
         });
      } else {
-        console.log('error retrieving identity:' + err);
+        console.error('error retrieving identity:' + err);
         alert('error retrieving identity: ' + err);
      }
   });
@@ -98,6 +97,10 @@ ValveClient.prototype.toggleValve = function(valve) {
 ValveClient.prototype.updateFirmware = function() {
   const { firmwareTopic } = this.config;
   return this.iotData.publish({ topic: firmwareTopic }).promise().then(console.log);
+}
+
+ValveClient.prototype.end = function () {
+  this.client.end();
 }
 
 export default function(config) {
