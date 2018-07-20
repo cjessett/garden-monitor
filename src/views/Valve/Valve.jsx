@@ -34,6 +34,10 @@ class Valve extends React.Component {
     if (this.props.name) return;
   }
 
+  componentWillUnmount() {
+    this.client.end();
+  }
+
   handleChange = ({ target: { checked } }) => {
     const desiredValveState = checked ? 'open' : 'closed';
     this.client.toggleValve(desiredValveState)
@@ -43,7 +47,9 @@ class Valve extends React.Component {
   handleMessage = (topic, payload) => {
     const { state: { reported } } = JSON.parse(payload);
     if (!reported) return;
-    if (reported.valve) this.props.toggleValve({ id: this.props.id, isOpen: reported.valve });
+    if (reported.valve) {
+      this.props.toggleValve({ id: this.props.id, isOpen: reported.valve === 'open' });
+    }
   }
 
   handleSubmit = ({ name, serial }) => {
@@ -65,7 +71,7 @@ class Valve extends React.Component {
           <Typography variant="display3">{name}</Typography>
         </GridItem>
         <GridItem>
-          <Typography variant="display1">Average: {average}</Typography>
+          <Typography variant="display1">Average: {average ? average : <MiniLoad />}</Typography>
         </GridItem>
         <GridItem>
           <FormGroup row>

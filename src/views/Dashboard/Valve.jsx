@@ -41,7 +41,10 @@ class Valve extends React.Component {
   handleMessage = (topic, payload) => {
     const { state: { reported } } = JSON.parse(payload);
     if (!reported) return;
-    if (reported.valve) this.props.toggleValve({ id: this.props.id, isOpen: reported.valve });
+    if (reported.valve) {
+      const isOpen = reported.valve === 'open';
+      this.props.toggleValve({ id: this.props.id, isOpen });
+    }
   }
 
   render() {

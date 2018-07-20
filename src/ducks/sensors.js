@@ -9,10 +9,15 @@ const BEGIN_UPDATE = 'sensors/BEGIN_UPDATE';
 const CREATE = 'sensors/CREATE';
 const UPDATE = 'sensors/UPDATE';
 const REMOVE = 'sensors/REMOVE';
+const UPDATE_MOISTURE = 'sensors/UPDATE_MOISTURE';
 
 // selectors
 export function getSensors(state, valveId) {
   return state.sensors.items.filter(s => s.valveId === valveId);
+}
+
+export function getSensor(state, id) {
+  return state.sensors.items.find(s => s.id === id);
 }
 
 export function getAverage(state, valveId) {
@@ -58,6 +63,13 @@ export function updateSensor({ id, valveId }) {
   }
 }
 
+export function updateMoisture({ id, moisture, timestamp }) {
+  return (dispatch, getState) => {
+    if (getSensor(getState(), id).timestamp === timestamp) return;
+    dispatch({ type: UPDATE_MOISTURE, id, moisture, timestamp });
+  }
+}
+
 const initialState = {
   items: [],
   loading: false,
@@ -78,9 +90,13 @@ export default function reducer(state = initialState, action) {
     case LOAD_SUCCESS:
       return { ...state, loading: false, error: null, items: action.sensors };
     case CREATE:
-      return { ...state, creating: false, error: null, items: [...state.items, action.sensor]}
+      return { ...state, creating: false, error: null, items: [...state.items, action.sensor] };
     case UPDATE:
-      return { ...state, updating: false, error: null, items: [...state.items.filter(s => s.id !== action.sensor.id), action.sensor] }
+      return { ...state, updating: false, error: null, items: [...state.items.filter(s => s.id !== action.sensor.id), action.sensor] };
+    case UPDATE_MOISTURE:
+      const target = state.items.find(s => s.id === action.id);
+      const updatedSensor = { ...target, moisture: action.moisture, timestamp: action.timestamp };
+      return { ...state, items: [...state.items.filter(s => s.id !== action.id), updatedSensor] };
     default: return state;
   }
 }
