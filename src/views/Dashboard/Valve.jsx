@@ -16,39 +16,76 @@ import CardBody from "components/Card/CardBody.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import MiniLoad from "components/Loading/Mini.jsx";
 
-import { toggleValve, isUpdatingId, getValve, getAverage } from 'ducks/valves';
+import { toggleValve, isUpdatingId, getValve } from 'ducks/valves';
+import { getSensors, getAverage, updateMoisture } from 'ducks/sensors';
 
-import ValveClient from '../../utils/ValveClient';
+import ValveClient from 'utils/ValveClient';
+import SoilClient from 'utils/Soil';
 
 import styles from "assets/jss/material-dashboard-react/components/valveCardStyle.jsx";
 
 class Valve extends React.Component {
   constructor(props) {
     super(props);
-    this.client = ValveClient({ thingName: this.props.name, onMessage: this.handleMessage })
+    this.client = ValveClient({ thingName: this.props.name, onMessage: this.handleMessage });
+    this.sensorClients = props.sensors.map(s => {
+      const client = SoilClient({ thingName: s.name, onConnect: this.handleSensorConnect(s.id), onMessage: () => {} });
+      return { id: s.id, client };
+    });
   }
 
   componentDidMount = () => {
-    return this.client.isValveOpen().then(isOpen => this.setState({ isOpen, fetched: true }))
+    return this.client.isValveOpen().then(isOpen => this.setState({ isOpen, fetched: true }));
+  }
+
+  componentWillUnmount() {
+    this.client.end();
   }
 
   handleChange = ({ target: { checked } }) => {
     const desiredValveState = checked ? 'open' : 'closed';
     this.client.toggleValve(desiredValveState)
-    .then(() => this.props.toggleValve({ id: this.props.id, isOpen: checked }))
+    .then(() => this.props.toggleValve({ id: this.props.id, isOpen: checked }));
   }
 
   handleMessage = (topic, payload) => {
     const { state: { reported } } = JSON.parse(payload);
     if (!reported) return;
     if (reported.valve) {
-      const isOpen = reported.valve === 'open';
-      this.props.toggleValve({ id: this.props.id, isOpen });
+      this.props.toggleValve({ id: this.props.id, isOpen: reported.valve === 'open' });
     }
   }
 
+  handleSensorConnect = id => () => {
+    this.sensorClients.find(s => s.id === id).client
+    .getMoisture()
+    .then(({ moisture, timestamp }) => {
+      this.props.updateMoisture({ moisture, timestamp, id });
+    });
+  }
+
+  handleSensorMessage = id => (topic, payload) => {
+    const { state: { reported: { moisture } }, timestamp } = JSON.parse(payload.toString());
+    const d = new Date(0);
+    d.setUTCSeconds(timestamp);
+    const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZoneName: 'short', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    const date = d.toLocaleDateString('en-US', opts);
+    this.props.updateMoisture({ moisture, timestamp, id: this.props.id });
+    this.setState({ date });
+  }
+
+  getLastUpdated(timestamp) {
+    const diffSeconds = Math.ceil(Date.now() / 1000) - timestamp;
+    if (diffSeconds < 60) return `${Math.floor(diffSeconds)} seconds`
+    const diffMins = diffSeconds / 60;
+    if (diffMins < 60) return `${Math.floor(diffMins)} minutes`;
+    const diffHours = diffMins / 60;
+    return `${Math.floor(diffHours)} hours`;
+  }
+
   render() {
-    const { id, name, classes, isOpen, average, isUpdating } = this.props;
+    const { id, name, classes, isOpen, average, isUpdating, sensors } = this.props;
+    const timestamp = sensors.sort((a, b) => a.timestamp > b.timestamp)[0].timestamp;
     const switchClasses = { switchBase: classes.colorSwitchBase, checked: classes.colorChecked, bar: classes.colorBar };
     return (
       <Card>
@@ -64,14 +101,14 @@ class Valve extends React.Component {
               </FormGroup>
             </GridItem>
             <GridItem xs={6}>
-              <Typography variant="display2">{average}</Typography>
+              <Typography variant="display2">{average ? average : <MiniLoad />}</Typography>
             </GridItem>
           </Grid>
         </CardBody>
         <CardFooter chart>
-          <span className={classes.stats}>
-            <AccessTime /> updated 2 hours ago
-          </span>
+          {timestamp && <span className={classes.stats}>
+            <AccessTime /> updated {this.getLastUpdated(timestamp)} ago
+          </span>}
           <span href="#" style={{ float: 'right' }}>
             <Link to={`/valves/${id}`}><i className="material-icons">arrow_right_alt</i></Link>
           </span>
@@ -81,18 +118,14 @@ class Valve extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  toggleValve: ({ id, isOpen }) => dispatch(toggleValve({ id, isOpen })),
-})
+const mapStateToProps = (state, ownProps) => {
+  const valveId = Number(ownProps.id);
+  const valve = getValve(state, valveId);
+  const sensors = getSensors(state, valveId);
+  const average = getAverage(state, valveId);
+  const loading = state.valves.loading;
+  const isUpdating = isUpdatingId(state, valveId);
+  return { ...valve, sensors, average, loading, isUpdating };
+};
 
-// const mapStateToProps = (state, ownProps) => ({
-//   average: getAverage(state, ownProps.id),
-//   isUpdating: isUpdatingId(state, ownProps.id),
-// })
-const mapStateToProps = (state, ownProps) => ({
-  ...getValve(state, ownProps.id),
-  isUpdating: isUpdatingId(state, ownProps.id),
-  average: getAverage(state, ownProps.id),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Valve));
+export default connect(mapStateToProps, { toggleValve, updateMoisture })(withStyles(styles)(Valve));

@@ -88,15 +88,14 @@ ValveClient.prototype.toggleValve = function(valve) {
   // publish to device (since device can't read shadow update)
   const publishUpdate = this.iotData.publish({ payload: updatePayload, topic: pubTopic })
     .promise()
-    .then(console.log)
     .catch(errorHandler);
 
-  return Promise.all([update, publishUpdate]).then(console.log)
+  return Promise.all([update, publishUpdate]);
 }
 
 ValveClient.prototype.updateFirmware = function() {
   const { firmwareTopic } = this.config;
-  return this.iotData.publish({ topic: firmwareTopic }).promise().then(console.log);
+  return this.iotData.publish({ topic: firmwareTopic });
 }
 
 ValveClient.prototype.end = function () {

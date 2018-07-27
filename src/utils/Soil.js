@@ -6,10 +6,10 @@ const AWSIoTData = require('aws-iot-device-sdk');
 const { REACT_APP_ENDPOINT, REACT_APP_REGION, REACT_APP_SOIL_POOL_ID } = process.env;
 const errorHandler = err => console.error(err, err.stack);
 
-function SoilClient({ name, onConnect, onMessage }) {
-  const topic = name => `$aws/things/${name}/shadow/update/accepted`;
+function SoilClient({ thingName, onConnect, onMessage }) {
+  const subTopic = `$aws/things/${thingName}/shadow/update/accepted`;
 
-  this.config = { thingName: name }
+  this.config = { thingName };
   this.iotData = new AWS.IotData({ endpoint: REACT_APP_ENDPOINT, region: REACT_APP_REGION });
 
   AWS.config.region = REACT_APP_REGION;
@@ -19,7 +19,7 @@ function SoilClient({ name, onConnect, onMessage }) {
   this.client = AWSIoTData.device({
      region: REACT_APP_REGION,
      host: REACT_APP_ENDPOINT,
-     clientId: `mqtt-${name}-${Math.floor((Math.random() * 100000) + 1)}`,
+     clientId: `mqtt-${thingName}-${Math.floor((Math.random() * 100000) + 1)}`,
      protocol: 'wss',
      maximumReconnectTimeMs: 8000,
      debug: true,
@@ -59,7 +59,7 @@ function SoilClient({ name, onConnect, onMessage }) {
   this.client.on('connect', onConnect);
   this.client.on('message', onMessage);
   this.client.on('error', console.error);
-  this.client.subscribe(topic(name));
+  this.client.subscribe(subTopic);
 }
 
 SoilClient.prototype.getMoisture = function() {
