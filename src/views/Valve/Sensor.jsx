@@ -18,7 +18,7 @@ class Sensor extends React.Component {
   constructor(props) {
     super(props);
     this.state = { connected: false };
-    this.client = SoilClient({ name: props.name, onConnect: this.handleConnect, onMessage: this.handleMessage });
+    this.client = SoilClient({ thingName: props.name, onConnect: this.handleConnect, onMessage: this.handleMessage });
   }
 
   componentWillUnmount() {

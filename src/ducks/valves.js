@@ -27,6 +27,7 @@ export function getAverage(state, id) {
   const sensors = state.sensors.items.filter(s => s.valveId === id);
   if (!sensors.length) return null;
   const sum = sensors.reduce((total, s) => total + s.moisture, 0);
+  debugger
   return Math.floor(sum / sensors.length);
 }
 
