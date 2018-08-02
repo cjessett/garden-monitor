@@ -13,6 +13,7 @@ const BEGIN_UPDATE = 'valves/BEGIN_UPDATE';
 const CREATE = 'valves/CREATE';
 const UPDATE = 'valves/UPDATE';
 const REMOVE = 'valves/REMOVE';
+const LOGOUT = 'auth/LOGOUT';
 
 // selectors
 export const getValves = state => state.valves.items;
@@ -69,7 +70,9 @@ export default function reducer(state = initialState, action) {
     case CREATE:
       return { ...state, creating: false, error: null, items: [...state.items, action.valve] };
     case UPDATE:
-      return { ...state, updating: false, error: null, items: [...state.items.filter(v => v.id !== action.valve.id), action.valve] }
+      return { ...state, updating: false, error: null, items: [...state.items.filter(v => v.id !== action.valve.id), action.valve] };
+    case LOGOUT:
+      return initialState;
     default: return state;
   }
 }

@@ -10,6 +10,7 @@ const CREATE = 'sensors/CREATE';
 const UPDATE = 'sensors/UPDATE';
 const REMOVE = 'sensors/REMOVE';
 const UPDATE_MOISTURE = 'sensors/UPDATE_MOISTURE';
+const LOGOUT = 'auth/LOGOUT';
 
 // selectors
 export function getSensors(state, valveId) {
@@ -97,6 +98,8 @@ export default function reducer(state = initialState, action) {
       const target = state.items.find(s => s.id === action.id);
       const updatedSensor = { ...target, moisture: action.moisture, timestamp: action.timestamp };
       return { ...state, items: [...state.items.filter(s => s.id !== action.id), updatedSensor] };
+    case LOGOUT:
+      return initialState;
     default: return state;
   }
 }
