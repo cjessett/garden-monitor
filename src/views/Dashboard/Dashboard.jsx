@@ -19,6 +19,7 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     if (this.props.valves.length) return;
+    this.props.load();
   }
 
   handleSubmit = ({ name, serial }) => {
