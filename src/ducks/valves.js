@@ -1,3 +1,7 @@
+// import axios from 'axios';
+//
+// import { API_URL } from './index';
+
 const getAvg = _ => Math.floor(300 + Math.random()*500);
 
 export const ALL = 'all';
