@@ -1,5 +1,3 @@
-import React from 'react';
-import { Redirect } from 'react-router';
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
@@ -8,6 +6,7 @@ import Logout from "@material-ui/icons/ExitToApp";
 import Unarchive from "@material-ui/icons/Unarchive";
 // core components/views
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
+import SensorPage from "views/Sensors/Sensors.jsx";
 import UserProfile from "views/UserProfile/UserProfile.jsx";
 // import TableList from "views/TableList/TableList.jsx";
 // import NotificationsPage from "views/Notifications/Notifications.jsx";
@@ -17,11 +16,18 @@ import Valve from "views/Valve/Valve.jsx";
 
 const dashboardRoutes = [
   {
-    path: "/dashboard",
-    sidebarName: "Dashboard",
-    navbarName: "Dashboard",
+    path: "/valves",
+    sidebarName: "Valves",
+    navbarName: "Valves",
     icon: Dashboard,
     component: DashboardPage
+  },
+  {
+    path: "/sensors",
+    sidebarName: "Soil Sensors",
+    navbarName: "Soil Sensors",
+    icon: Dashboard,
+    component: SensorPage
   },
   {
     path: "/user",

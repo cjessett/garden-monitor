@@ -27,9 +27,9 @@ import styles from "assets/jss/material-dashboard-react/components/valveCardStyl
 class Valve extends React.Component {
   constructor(props) {
     super(props);
-    this.client = ValveClient({ thingName: this.props.name, onMessage: this.handleMessage });
+    this.client = ValveClient({ thingName: this.props.serial, onMessage: this.handleMessage });
     this.sensorClients = props.sensors.map(s => {
-      const client = SoilClient({ thingName: s.name, onConnect: this.handleSensorConnect(s.id), onMessage: () => {} });
+      const client = SoilClient({ thingName: s.serial, onConnect: this.handleSensorConnect(s.id), onMessage: () => {} });
       return { id: s.id, client };
     });
   }
@@ -85,7 +85,7 @@ class Valve extends React.Component {
 
   render() {
     const { id, name, classes, isOpen, average, isUpdating, sensors } = this.props;
-    const timestamp = sensors.sort((a, b) => a.timestamp > b.timestamp)[0].timestamp;
+    const timestamp = sensors.length && sensors.sort((a, b) => a.timestamp > b.timestamp)[0].timestamp;
     const switchClasses = { switchBase: classes.colorSwitchBase, checked: classes.colorChecked, bar: classes.colorBar };
     return (
       <Card>

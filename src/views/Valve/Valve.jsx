@@ -26,7 +26,7 @@ class Valve extends React.Component {
   constructor(props) {
     super(props);
     this.state = { formOpen: false };
-    this.client = ValveClient({ thingName: this.props.name, onMessage: this.handleMessage });
+    this.client = ValveClient({ thingName: this.props.serial, onMessage: this.handleMessage });
   }
 
   componentDidMount() {

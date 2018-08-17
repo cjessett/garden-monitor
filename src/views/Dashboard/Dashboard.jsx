@@ -14,6 +14,12 @@ import Filter from './VisbleValveFilter.jsx';
 import { createValve, getVisibleValves } from 'ducks/valves';
 import { hydrate } from 'ducks';
 
+const RegisterValve = ({ onClick }) => (
+  <p style={{ padding: '15px 20px', textAlign: 'center', border: '1px solid #d8dee2', borderRadius: '5px' }}>
+    To get started, <a href="#register" onClick={onClick}>Register a Valve</a>
+  </p>
+)
+
 class Dashboard extends React.Component {
   state = { formOpen: false };
 
@@ -50,7 +56,10 @@ class Dashboard extends React.Component {
               <NewValveForm handleSubmit={this.handleSubmit} closeForm={this.closeForm} /> :
               isCreatingValve ?
               <Spinner /> :
-              <Button justIcon round color="info" aria-label="add" onClick={this.openForm}><AddIcon /></Button>}
+              this.props.valves.length ?
+                (<Button justIcon round color="info" aria-label="add" onClick={this.openForm}><AddIcon /></Button>) :
+                <RegisterValve onClick={this.openForm} />
+              }
           </GridItem>
         </Grid>
       </div>

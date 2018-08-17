@@ -14,6 +14,7 @@ const LOGOUT = 'auth/LOGOUT';
 
 // selectors
 export function getSensors(state, valveId) {
+  if (!valveId) return state.sensors.items;
   return state.sensors.items.filter(s => s.valveId === valveId);
 }
 
@@ -46,6 +47,7 @@ export function createSensor({ name, valveId }) {
   return (dispatch, getState) => {
     dispatch({ type: BEGIN_CREATE });
     // API call
+    debugger
     const id = Math.max(...getState().sensors.items.map(s => s.id)) + 1;
     const newSensor = { name, id, valveId, moisture: getAvg() };
     // sucesss

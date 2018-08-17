@@ -19,7 +19,6 @@ import "assets/css/material-dashboard-react.css?v=1.3.0";
 
 import { hydrate } from 'ducks';
 import { isLoading } from 'ducks/valves';
-import { logout } from 'ducks/auth';
 import indexRoutes from "routes/index.jsx";
 
 const initialState = { auth: { isAuthenticated: !!localStorage.getItem('token') } }
