@@ -1,8 +1,6 @@
-// import axios from 'axios';
-//
-// import { API_URL } from './index';
+import axios from 'axios';
 
-const getAvg = _ => Math.floor(300 + Math.random()*500);
+import { API_URL } from './index';
 
 export const ALL = 'all';
 export const OPEN = 'open';
@@ -14,6 +12,7 @@ const LOAD_SUCCESS = 'LOAD_SUCCESS';
 const LOAD_FAIL = 'LOAD_FAIL';
 const BEGIN_CREATE = 'valves/BEGIN_CREATE';
 const BEGIN_UPDATE = 'valves/BEGIN_UPDATE';
+const CREATE_FAIL = 'valves/CREATE_FAIL';
 const CREATE = 'valves/CREATE';
 const UPDATE = 'valves/UPDATE';
 const REMOVE = 'valves/REMOVE';
@@ -73,6 +72,8 @@ export default function reducer(state = initialState, action) {
       return { ...state, loading: false, error: null, items: action.valves };
     case CREATE:
       return { ...state, creating: false, error: null, items: [...state.items, action.valve] };
+    case CREATE_FAIL:
+      return { ...state, creating: false, error: action.error };
     case UPDATE:
       return { ...state, updating: false, error: null, items: [...state.items.filter(v => v.id !== action.valve.id), action.valve] };
     case LOGOUT:
@@ -103,10 +104,13 @@ export function createValve({ name, serial }) {
   return (dispatch, getState) => {
     dispatch({ type: BEGIN_CREATE });
     // API call
-    const id = Math.max(...getState().valves.items.map(v => v.id)) + 1;
-    const newValve = { name, id, isOpen: false, avg: getAvg() };
-    // success
-    setTimeout(() => dispatch(createValveSuccess(newValve)), 500);
+    const token = localStorage.getItem('token');
+    const headers = { authorization: `Bearer ${token}`, 'X-Key-Inflection': 'camel' };
+    const valve = { name, serial };
+    return axios
+      .post(`${API_URL}/valves`, { valve }, { headers })
+      .then(({ data }) => dispatch(createValveSuccess(data)))
+      .catch(error => dispatch({ type: CREATE_FAIL, error }));
   }
 }
 

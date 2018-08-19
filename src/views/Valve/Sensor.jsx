@@ -18,7 +18,7 @@ class Sensor extends React.Component {
   constructor(props) {
     super(props);
     this.state = { connected: false };
-    this.client = SoilClient({ thingName: props.serial, onConnect: this.handleConnect, onMessage: this.handleMessage });
+    this.client = SoilClient({ serial: props.serial, onConnect: this.handleConnect, onMessage: this.handleMessage });
   }
 
   componentWillUnmount() {
@@ -28,7 +28,8 @@ class Sensor extends React.Component {
   handleConnect = () => {
     this.setState({ connected: true });
     this.client.getMoisture()
-    .then(({ moisture, timestamp }) => {
+    .then((data = { moisture: '---', timestamp: Math.floor(Date.now()/1000) }) => {
+      const { moisture, timestamp } = data;
       this.props.updateMoisture({ moisture, timestamp, id: this.props.id });
     });
   }

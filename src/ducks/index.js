@@ -5,7 +5,7 @@ import auth from './auth';
 import valves from './valves';
 import sensors from './sensors';
 
-export const API_URL = 'http://localhost:4000';
+export const API_URL = process.env.REACT_APP_API_URL;
 
 const BEGIN_LOAD = 'BEGIN_LOAD';
 const LOAD_SUCCESS = 'LOAD_SUCCESS';
