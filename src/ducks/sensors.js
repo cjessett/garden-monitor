@@ -1,4 +1,6 @@
-const getAvg = _ => Math.floor(300 + Math.random()*500);
+import axios from 'axios';
+
+import { API_URL } from './index';
 
 // action types
 const BEGIN_LOAD = 'BEGIN_LOAD';
@@ -7,6 +9,7 @@ const LOAD_FAIL = 'LOAD_FAIL';
 const BEGIN_CREATE = 'sensors/BEGIN_CREATE';
 const BEGIN_UPDATE = 'sensors/BEGIN_UPDATE';
 const CREATE = 'sensors/CREATE';
+const CREATE_FAIL = 'valves/CREATE_FAIL';
 const UPDATE = 'sensors/UPDATE';
 const REMOVE = 'sensors/REMOVE';
 const UPDATE_MOISTURE = 'sensors/UPDATE_MOISTURE';
@@ -43,15 +46,17 @@ export function removeSensor(id) {
 }
 
 // Side effects
-export function createSensor({ name, valveId }) {
+export function createSensor({ name, serial }) {
   return (dispatch, getState) => {
     dispatch({ type: BEGIN_CREATE });
     // API call
-    debugger
-    const id = Math.max(...getState().sensors.items.map(s => s.id)) + 1;
-    const newSensor = { name, id, valveId, moisture: getAvg() };
-    // sucesss
-    setTimeout(() => dispatch(createSensorSuccess(newSensor)), 500);
+    const token = localStorage.getItem('token');
+    const headers = { authorization: `Bearer ${token}`, 'X-Key-Inflection': 'camel' };
+    const sensor = { name, serial };
+    return axios
+      .post(`${API_URL}/sensors`, { sensor }, { headers })
+      .then(({ data }) => dispatch(createSensorSuccess(data)))
+      .catch(error => dispatch({ type: CREATE_FAIL, error }));
   }
 }
 
@@ -94,6 +99,8 @@ export default function reducer(state = initialState, action) {
       return { ...state, loading: false, error: null, items: action.sensors };
     case CREATE:
       return { ...state, creating: false, error: null, items: [...state.items, action.sensor] };
+    case CREATE_FAIL:
+      return { ...state, creating: false, error: action.error };
     case UPDATE:
       return { ...state, updating: false, error: null, items: [...state.items.filter(s => s.id !== action.sensor.id), action.sensor] };
     case UPDATE_MOISTURE:

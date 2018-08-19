@@ -71,7 +71,7 @@ const dashboardRoutes = [
     component: Valve,
     invisible: true,
   },
-  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
+  { redirect: true, path: "/", to: "/valves", navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;

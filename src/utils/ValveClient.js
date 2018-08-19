@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const AWSIoTData = require('aws-iot-device-sdk');
 
-const { REACT_APP_ENDPOINT, REACT_APP_REGION, REACT_APP_IDENTITY_POOL_ID } = process.env;
+const { REACT_APP_IOT_ENDPOINT, REACT_APP_REGION, REACT_APP_IDENTITY_POOL_ID } = process.env;
 
 // Initialize the Amazon Cognito credentials provider
 AWS.config.region = REACT_APP_REGION; // Region
@@ -17,11 +17,11 @@ function ValveClient({ thingName, onMessage }) {
   const firmwareTopic =`/things/${thingName}/firmware/update`;
 
   this.config = { thingName, subTopic, pubTopic, firmwareTopic };
-  this.iotData = new AWS.IotData({ endpoint: REACT_APP_ENDPOINT, region: REACT_APP_REGION });
+  this.iotData = new AWS.IotData({ endpoint: REACT_APP_IOT_ENDPOINT, region: REACT_APP_REGION });
 
   this.client = AWSIoTData.device({
      region: REACT_APP_REGION,
-     host: REACT_APP_ENDPOINT,
+     host: REACT_APP_IOT_ENDPOINT,
      clientId,
      protocol: 'wss',
      maximumReconnectTimeMs: 8000,

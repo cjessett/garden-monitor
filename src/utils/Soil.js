@@ -3,14 +3,15 @@ require('dotenv').config();
 const AWS = require('aws-sdk');
 const AWSIoTData = require('aws-iot-device-sdk');
 
-const { REACT_APP_ENDPOINT, REACT_APP_REGION, REACT_APP_SOIL_POOL_ID } = process.env;
+const { REACT_APP_IOT_ENDPOINT, REACT_APP_REGION, REACT_APP_SOIL_POOL_ID } = process.env;
 const errorHandler = err => console.error(err, err.stack);
 
-function SoilClient({ thingName, onConnect, onMessage }) {
+function SoilClient({ serial, onConnect, onMessage }) {
+  const thingName = `ss-${serial}`;
   const subTopic = `$aws/things/${thingName}/shadow/update/accepted`;
 
   this.config = { thingName };
-  this.iotData = new AWS.IotData({ endpoint: REACT_APP_ENDPOINT, region: REACT_APP_REGION });
+  this.iotData = new AWS.IotData({ endpoint: REACT_APP_IOT_ENDPOINT, region: REACT_APP_REGION });
 
   AWS.config.region = REACT_APP_REGION;
 
@@ -18,7 +19,7 @@ function SoilClient({ thingName, onConnect, onMessage }) {
 
   this.client = AWSIoTData.device({
      region: REACT_APP_REGION,
-     host: REACT_APP_ENDPOINT,
+     host: REACT_APP_IOT_ENDPOINT,
      clientId: `mqtt-${thingName}-${Math.floor((Math.random() * 100000) + 1)}`,
      protocol: 'wss',
      maximumReconnectTimeMs: 8000,
