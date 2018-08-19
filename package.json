@@ -46,7 +46,7 @@
   "bugs": {
     "url": "https://github.com/cjessett/garden-monitor/issues"
   },
-  "homepage": "https://cjessett.com/garden-monitor/",
+  "homepage": "https://garden-monitor.cjessett.com/",
   "devDependencies": {
     "gh-pages": "^1.2.0",
     "redux-devtools-extension": "^2.13.5"
