@@ -8,6 +8,7 @@ import thunkMiddleware from 'redux-thunk'
 import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { connectRouter, routerMiddleware } from 'connected-react-router'
+import registerServiceWorker from './registerServiceWorker';
 
 import rootReducer from './ducks'
 
@@ -76,3 +77,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
+registerServiceWorker();
