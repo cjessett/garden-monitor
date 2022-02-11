@@ -8,7 +8,7 @@
     "@material-ui/icons": "1.1.0",
     "@types/googlemaps": "3.30.9",
     "@types/markerclustererplus": "2.1.33",
-    "ajv": "6.5.1",
+    "ajv": "6.12.3",
     "aws-iot-device-sdk": "^2.2.1",
     "aws-sdk": "^2.275.1",
     "axios": "^0.18.0",
